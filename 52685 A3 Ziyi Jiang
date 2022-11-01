@@ -1,0 +1,71 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Thu Oct 20 20:34:43 2022
+
+@author: JZY
+"""
+import matplotlib.pyplot as plt
+import pandas as pd  # data processing, CSV file I/O (e.g. pd.read_csv)
+import seaborn as sns
+inline
+import os
+
+for dirname, _, filenames in os.walk('/kaggle/input'):
+    for filename in filenames:
+        print(os.path.join(dirname, filename))
+df = pd.read_csv('ds_salaries.csv')
+df.info()
+df.head()
+df.shape
+df.isnull().sum()
+df.corr()
+
+df.drop('Unnamed: 0', axis=1, inplace=True)
+plt.style.use('fivethirtyeight')
+plt.figure(figsize=(14, 7))
+sns.countplot(data=df, x='employment_type')
+plt.show()
+
+plt.figure(figsize=(14, 7))
+sns.countplot(data=df, x='salary_currency')
+plt.show()
+
+plt.figure(figsize=(14, 7))
+sns.countplot(data=df, x='company_size')
+plt.show()
+
+plt.figure(figsize=(14, 7))
+sns.countplot(data=df, x='experience_level', hue='employment_type')
+plt.ylabel(None)
+plt.legend(loc=('upper right'))
+plt.show()
+
+mean_salary = df.groupby('job_title')['salary_in_usd'].mean().reset_index()
+mean_salary = mean_salary.sort_values('salary_in_usd', ascending=False)
+
+mean_salary = df.groupby('company_location')['salary_in_usd'].mean().reset_index()
+mean_salary = mean_salary.sort_values('salary_in_usd', ascending=False)
+
+plt.figure(figsize=(14, 14))
+sns.barplot(data=mean_salary, x='salary_in_usd', y='company_location')
+plt.ylabel(None)
+plt.xlabel('Annual Salary in USD')
+plt.show()
+
+mean_salary = df.groupby('job_title')['salary_in_usd'].mean().reset_index()
+mean_salary = mean_salary.sort_values('salary_in_usd', ascending=False)
+
+plt.figure(figsize=(14, 21))
+sns.barplot(data=mean_salary, x='salary_in_usd', y='job_title')
+plt.ylabel(None)
+plt.xlabel('Mean Annual Salary in USD')
+plt.show()
+
+median_salary = df.groupby('company_location')['salary_in_usd'].median().reset_index()
+median_salary = median_salary.sort_values('salary_in_usd', ascending=False)
+
+plt.figure(figsize=(14, 14))
+sns.barplot(data=median_salary, x='salary_in_usd', y='company_location')
+plt.ylabel(None)
+plt.xlabel('Annual Salary in USD')
+plt.show()
